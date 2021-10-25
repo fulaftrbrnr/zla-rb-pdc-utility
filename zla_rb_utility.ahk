@@ -1,4 +1,4 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
@@ -66,7 +66,7 @@ Gui,main:Color, 323232, 1e1e1e
 Gui,main:Add, Text, cWhite, Airport:
 Gui,main:Add, DDL, cWhite vApt_DDL gApt_DDL_Change HwndApt_DDL_ID, %airport_str% ;these GUI control options are the worst, they set an output variable for DDL value, link a subroutine to the change event, and store the ID (HWND) in another output variable
 Gui,main:Add, Text, cWhite x+10 y5 gBox_Change, Controller ID:
-Gui,main:Add, Edit, cWhite r1 vCon_Txt
+Gui,main:Add, Edit, cWhite r1 vCon_Txt gBox_Change
 Gui,main:Add, Text, cWhite x10 y+5   , Config:
 Gui,main:Add, DDL, cWhite vCfg_DDL gCfg_DDL_Change HwndCfg_DDL_ID, %cfg_str%
 Gui,main:Add, Button, xp+130 yp w120 cRed gSetup_Button HwndSetup_Button_ID, Initial &Setup (not ran)
@@ -76,24 +76,23 @@ Gui,main:Add, Text, y+7 x140 cWhite, q)
 Gui,main:Add, Checkbox, Checked yp-2 x153 w20 h20 cWhite vPDCv_Box1 HwndPDCv_Box1_ID gBox_Change
 Gui,main:Add, Checkbox, yp+0 x173 w20 h20 cWhite vPDCc_Box1 gBox_Change
 Gui,main:Add, Edit, yp+0 x193 w50 h20 cWhite vPDCm_Edit1 HwndPDCm_Edit1_ID gBox_Change
-Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview1_ID, `.pdcvu
+Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview1_ID
 Gui,main:Add, Text, y+10 x140 cWhite, w)
 Gui,main:Add, Checkbox, Checked yp-2 x153 w20 h20 cWhite vPDCv_Box2 HwndPDCv_Box2_ID gBox_Change
 Gui,main:Add, Checkbox, yp+0 x173 w20 h20 cWhite vPDCc_Box2 gBox_Change
 Gui,main:Add, Edit, yp+0 x193 w50 h20 cWhite vPDCm_Edit2 HwndPDCm_Edit2_ID gBox_Change
-Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview2_ID, `.pdcvu
+Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview2_ID
 Gui,main:Add, Text, y+10 x140 cWhite, e)
 Gui,main:Add, Checkbox, Checked yp-2 x153 w20 h20 cWhite vPDCv_Box3 HwndPDCv_Box3_ID gBox_Change
 Gui,main:Add, Checkbox, yp+0 x173 w20 h20 cWhite vPDCc_Box3 gBox_Change
 Gui,main:Add, Edit, yp+0 x193 w50 h20 cWhite vPDCm_Edit3 HwndPDCm_Edit3_ID gBox_Change
-Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview3_ID, `.pdcvu
+Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview3_ID
 Gui,main:Add, Text, y+10 x140 cWhite, r)
 Gui,main:Add, Checkbox, Checked yp-2 x153 w20 h20 cWhite vPDCv_Box4 HwndPDCv_Box4_ID gBox_Change
 Gui,main:Add, Checkbox, yp+0 x173 w20 h20 cWhite vPDCc_Box4 gBox_Change
 Gui,main:Add, Edit, yp+0 x193 w50 h20 cWhite vPDCm_Edit4 HwndPDCm_Edit4_ID gBox_Change
-Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview4_ID, `.pdcvu
+Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview4_ID
 Gui,main:Add, Checkbox, y+10 x140 cWhite vPDCr_Box gBox_Change, Use rwy PDCs? (e`.g: `.pdcvr)
-;Gui,main:Add, Edit, y+10 w150 cWhite r1 vPDC_Edit HwndPDC_Edit_ID, `.pdcvxur 5000 25R
 Gui,main:Add, GroupBox, cWhite x5 y95 w125 h150, Runways (Ctrl+Shift+#)
 Gui,main:Add, Text, y130 xp+5 cWhite, 1)
 Gui,main:Add, Edit, xp+20 yp-3 w80 cWhite r1 vRwy_Edit1 HwndRwy_Edit1_ID
@@ -103,6 +102,9 @@ Gui,main:Add, Text, x10 y+5 cWhite, 3)
 Gui,main:Add, Edit, xp+20 yp-3 w80 cWhite r1 vRwy_Edit3 HwndRwy_Edit3_ID
 Gui,main:Add, Text, x10 y+5 cWhite, 4)
 Gui,main:Add, Edit, xp+20 yp-3 w80 cWhite r1 vRwy_Edit4 HwndRwy_Edit4_ID
+;  initialize PDCs and preview
+Gosub, Box_Change
+;  init window position if the .ini file has it saved
 if ((ix = "ERROR") || (iy = "ERROR")) 
 	Gui,main:Show, Center
 else 
@@ -130,8 +132,7 @@ Cfg_DDL_Change:
 	Gui, Submit, NoHide
 	rwy_ary := StrSplit(cfg_ary[Cfg_DDL], ",")
 	edit_ary := []
-	;txt_h := txt_ary.Length()*100
-	;GuiControl, Move, %Rwy_Txt_ID%, w800 h%txt_h%
+	
 	txt := ""
 	for i in [1,2,3,4]
 	{
@@ -139,7 +140,6 @@ Cfg_DDL_Change:
 		GuiControl, , % %edit_id_var%, % rwy_ary[i]
 	}
 	
-	;Gui, Submit, NoHide 
 Return
 
 Box_Change:
@@ -188,61 +188,22 @@ Setup_Button:
 		env := ""
 		
 	Gosub, PromptClick2
-	
-	; if (env = "VRC")
-		; Tooltip, %nn2% ;temporary, delete this
-	; else if (env = "VSTARS")
-		; Tooltip, %nn2% ;temporary, delete this
-	; else
+
 	if (env = "")
 		MsgBox, This script not configured for your radar client`. Errors may occur`.
 		
-	;~ InputBox, config_str, Enter config, Enter dep rwys first and dep controller ID last`, all separated by commas.`nThe order of runways will determine your keybinds (first is ctrl+shift+1`, etc.)`nFormat`: [rwy1]`,[rwy2]`,[rwy3]`,[CID] e.g`: 24L`,25R`,T1A
 	GuiControl, , %Setup_Button_ID%, Initial &Setup (complete)
 	GuiControl, +cGreen , %Setup_Button_ID%
-	;~ if (SubStr(config_str, 1, 1) = "*")
-		;~ env := "VSTARS"
-	;~ config := StrSplit(config_str, [".",","], "*") ;turns the user inputted runway(s) and controller ID into an array
 Return
-
-;ctrl+shift+b to initialize the tool - you must click into any FP Route field just before initializing
-;vSTARS users should enter an asterisk (*) before this to initialize properly (probably not required)
-;~ ^+b::
-	;~ Gosub, PromptClick1
-	;~ MouseGetPos, , , id, nn ;this is why you have to click into the FP Route field. grabs the HWND of the window (id) and the class_nn of the textbox control (nn)
-	;~ WinGet, procname, ProcessName, ahk_id %id%
-	;~ if InStr(procname, "vSTA")
-		;~ env := "VSTARS"
-	;~ else if InStr(procname, "vrc")
-		;~ env := "VRC"
-	;~ else
-		;~ env := ""
-		
-	;~ Gosub, PromptClick2
-	
-	;~ ; if (env = "VRC")
-		;~ ; Tooltip, %nn2% ;temporary, delete this
-	;~ ; else if (env = "VSTARS")
-		;~ ; Tooltip, %nn2% ;temporary, delete this
-	;~ ; else
-	;~ if (env = "")
-		;~ MsgBox, This script not configured for your radar client`. Errors may occur`.
-		
-	;~ ;InputBox, config_str, Enter config, Enter dep rwys first and dep controller ID last`, all separated by commas.`nThe order of runways will determine your keybinds (first is ctrl+shift+1`, etc.)`nFormat`: [rwy1]`,[rwy2]`,[rwy3]`,[CID] e.g`: 24L`,25R`,T1A
-
-	;~ ;if (SubStr(config_str, 1, 1) = "*")
-		;~ ;env := "VSTARS"
-	;~ ;config := StrSplit(config_str, [".",","], "*") ;turns the user inputted runway(s) and controller ID into an array
-;~ Return
 
 ;get window ID and control ID to clipboard (for debug purposes)
-^+g::
-	MouseGetPos, , , idg, nng
-	;nng2 := StrReplace(nng, "ad12", "ad18")
-	;ControlGetText, wintitle, %nng2%, ahk_id %idg%
-	;MsgBox, %wintitle%
-	clipboard := % idg . " `; " . nng
-Return
+;~ ^+g::
+	;~ MouseGetPos, , , idg, nng
+	;~ ;nng2 := StrReplace(nng, "ad12", "ad18")
+	;~ ;ControlGetText, wintitle, %nng2%, ahk_id %idg%
+	;~ ;MsgBox, %wintitle%
+	;~ clipboard := % idg . " `; " . nng
+;~ Return
 
 ;Each one of these is one of the runways input during initialization IN ORDER. Hotkey is ctrl+shift+number. I don't think numpad will work
 ;VRC: Make sure you have the aircraft selected before using these, no need to have FP open. Mouse position is irrelevant
@@ -290,7 +251,6 @@ Return
 
 ;the meat and taters:
 SendBound:
-	;MouseGetPos, , , id2, nn2
 	if (env = "VRC") { ;this block opens the FP of the selected a/c in VRC... makes life slightly easier for VRC users
 		SendInput {F6} 
 		Sleep, 100
@@ -316,7 +276,6 @@ SendBound:
 	}	
 	rwy_var = Rwy_Edit%rwy%
 	cbtext := % ".bound " . Con_Txt . " " . %rwy_var% . " " . scratch 
-	;ControlSetText, StrReplace(%nn%, "ad12", "ad11"), %cbtext%, ahk_id %id% ;StrReplace(%nn%, "ad12", "ad11"), cbtext, %id%
 
 	ControlSetText, %nn2%, %cbtext%, ahk_id %id2%
 	timerfunc := Func("DepReminder").Bind(nn3_txt) ;have to bind the function and parameter to a variable for the timer
@@ -324,12 +283,7 @@ SendBound:
 Return
 
 SendPDC:
-	if (env = "VRC") { ;this block opens the FP of the selected a/c in VRC... makes life slightly easier for VRC users
-		SendInput {F6} 
-		Sleep, 100
-		SendEvent {NumpadAdd}
-	}
-	else if (env = "VSTARS") {
+	if (env = "VSTARS") {
 		nn3 := StrReplace(nn, "ad12", "ad18") ;this gets the callsign in vSTARS
 		ControlGetText, nn3_txt, %nn3%, ahk_id %id%
 		ControlSetText, %nn2%, %nn3_txt%, ahk_id %id2% ;this puts the callsign into the vSTARS text box
@@ -337,7 +291,6 @@ SendPDC:
 		Sleep, 200
 		SendEvent {NumpadAdd} ;this selects the aircraft
 	}
-	;rwy_var = Rwy_Edit%rwy%
 
 	ControlSetText, %nn2%, % PDC%rwy%, ahk_id %id2%
 
@@ -350,6 +303,7 @@ PromptClick1:
 	Gui,help:Show
 	KeyWait, LButton, D
 	MouseGetPos, , , id, nn
+	KeyWait, LButton, U ;needed to add this to avoid PromptClick2 from registering the first down event
 	Gui, help: Destroy
 Return
 
