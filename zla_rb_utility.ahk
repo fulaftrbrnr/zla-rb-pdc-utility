@@ -3,9 +3,9 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; --ZLA Rolling/Boundary Utility v0.2.1--
+; --ZLA Rolling/Boundary Utility v0.2.2--
 ;       Created by Jeff Schuss
-; Last updated 10/25/2021 by Jeff Schuss
+; Last updated 12/30/21 by Jeff Schuss
 script_title := "ZLA Rolling/Boundary Utility"
 ini := "zla_rbu.ini"
 
@@ -70,7 +70,7 @@ Gui,main:Add, Edit, cWhite r1 vCon_Txt gBox_Change
 Gui,main:Add, Text, cWhite x10 y+5   , Config:
 Gui,main:Add, DDL, cWhite vCfg_DDL gCfg_DDL_Change HwndCfg_DDL_ID, %cfg_str%
 Gui,main:Add, Button, xp+130 yp w120 cRed gSetup_Button HwndSetup_Button_ID, Initial &Setup (not ran)
-Gui,main:Add, GroupBox, cWhite x135 y95 w245 h150, PDC (Ctrl+Shift+letter)
+Gui,main:Add, GroupBox, cWhite x135 y95 w245 h170, PDC (Ctrl+Shift+letter)
 Gui,main:Add, Text, y110 xp+15 cWhite, Via  Chg       Alt        Preview
 Gui,main:Add, Text, y+7 x140 cWhite, q)
 Gui,main:Add, Checkbox, Checked yp-2 x153 w20 h20 cWhite vPDCv_Box1 HwndPDCv_Box1_ID gBox_Change
@@ -93,7 +93,8 @@ Gui,main:Add, Checkbox, yp+0 x173 w20 h20 cWhite vPDCc_Box4 gBox_Change
 Gui,main:Add, Edit, yp+0 x193 w50 h20 cWhite vPDCm_Edit4 HwndPDCm_Edit4_ID gBox_Change
 Gui,main:Add, Text, yp+2 x245 cWhite w130 HwndPDC_Preview4_ID
 Gui,main:Add, Checkbox, y+10 x140 cWhite vPDCr_Box gBox_Change, Use rwy PDCs? (e`.g: `.pdcvr)
-Gui,main:Add, GroupBox, cWhite x5 y95 w125 h150, Runways (Ctrl+Shift+#)
+Gui,main:Add, Checkbox, y+10 x140 cWhite vPush_Box gBox_Change, Use push PDCs? (e`.g: `.pushpdcv)
+Gui,main:Add, GroupBox, cWhite x5 y95 w125 h170, Runways (Ctrl+Shift+#)
 Gui,main:Add, Text, y130 xp+5 cWhite, 1)
 Gui,main:Add, Edit, xp+20 yp-3 w80 cWhite r1 vRwy_Edit1 HwndRwy_Edit1_ID
 Gui,main:Add, Text, x10 y+5 cWhite, 2)
@@ -147,7 +148,10 @@ Box_Change:
 	Loop, 4 
 	{
 		i := A_Index
-		txt := ".pdc"
+		if (Push_Box = 1)
+			txt := ".pushpdc"
+		else
+			txt := ".pdc"
 		if (PDCv_Box%i% = 1)
 			txt := txt . "v"
 		if (PDCm_Edit%i%)
@@ -165,7 +169,11 @@ Box_Change:
 			GuiControl, +cRed, % PDC_Preview%i%_ID
 		else
 			GuiControl, +cWhite , % PDC_Preview%i%_ID
-		txt := txt . " " . PDCm_Edit%i% . " " . Con_Txt
+		
+		if (Con_Txt = "*")
+			txt := txt . " " . PDCm_Edit%i%
+		else
+			txt := txt . " " . PDCm_Edit%i% . " " . Con_Txt
 		if (PDCr_Box = 1)
 			txt := txt . " " . Rwy_Edit%i%
 		txt := RegExReplace(txt,"\x20{2,}"," ")
