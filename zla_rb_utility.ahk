@@ -3,9 +3,9 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; --ZLA Rolling/Boundary Utility v0.2.2--
+; --ZLA Rolling/Boundary Utility v0.2.3--
 ;       Created by Jeff Schuss
-; Last updated 12/30/21 by Jeff Schuss
+; Last updated 3/1/22 by Jeff Schuss
 script_title := "ZLA Rolling/Boundary Utility"
 ini := "zla_rbu.ini"
 
@@ -269,8 +269,10 @@ SendBound:
 		ControlGetText, nn3_txt, %nn3%, ahk_id %id%
 		ControlSetText, %nn2%, %nn3_txt%, ahk_id %id2% ;this puts the callsign into the vSTARS text box
 		ControlFocus, %nn2%, ahk_id %id2%
-		Sleep, 200
-		SendEvent {NumpadAdd} ;this selects the aircraft
+		Sleep, 100
+		Send  {NumpadAdd Down} ;this selects the aircraft
+		Sleep, 50
+		Send  {NumpadAdd Up}
 	}
 	ControlGetText, ctrltext, %nn%, ahk_id %id%
 	atext := StrSplit(ctrltext, ["."," "])
@@ -296,8 +298,10 @@ SendPDC:
 		ControlGetText, nn3_txt, %nn3%, ahk_id %id%
 		ControlSetText, %nn2%, %nn3_txt%, ahk_id %id2% ;this puts the callsign into the vSTARS text box
 		ControlFocus, %nn2%, ahk_id %id2%
-		Sleep, 200
-		SendEvent {NumpadAdd} ;this selects the aircraft
+		Sleep, 100
+		Send  {NumpadAdd Down} ;this selects the aircraft
+		Sleep, 50
+		Send  {NumpadAdd Up}
 	}
 
 	ControlSetText, %nn2%, % PDC%rwy%, ahk_id %id2%
