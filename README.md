@@ -6,14 +6,15 @@ Download both the .ini and .exe. Put both in the same directory and run the .exe
 May not work with VRC. Should be fully functional in vSTARS.
 
 ## Usage:
-1. Select your airport/config and enter which controller you want to send notifications to (e.g: 6S, 1A, C55, etc.; this also affects departure freq for PDCs).
-2. Note: Use * as the controller ID to omit the controller ID if you are the departure controller.
-3. Press the Initial Setup button (you should get two click prompts. Sometimes it bugs out and you only get one... press it again and retry if this happens)
-4. You'll click once in your flight plan route window (where the SID/transition goes)
+1. [For vSTARS 1.4.4 and onward] Run the utility .exe file as administrator. It will not work otherwise.
+2. Select your airport/config and enter which controller you want to send notifications to (e.g: 6S, 1A, C55, etc.; this also affects departure freq for PDCs).
+3. Note: Use * as the controller ID to omit the controller ID if you are the departure controller.
+4. Press the Initial Setup button (you should get two click prompts. Sometimes it bugs out and you only get one... press it again and retry if this happens)
+5. You'll click once in your flight plan route window (where the SID/transition goes)
     1. You'll click again in your text entry window (where you send dot commands)  
-5. PDCs can be configured with checkboxes for climb via, routing change, a fillable altitude box, and a global checkbox at the bottom which adds runway PDC syntax (only use if your alias file/config file has been customized to include this!)  
-6. **VRC:** Select the aircraft to choose who receives the PDC or which aircraft is indicated in the boundary notification (the tool will auto-open the flight plan; opposite behavior of vSTARS)
-7. **vSTARS:** Open the flight plan of the aircraft to choose who receives the PDC or which aircraft is indicated in the boundary notification (the tool will auto-select the aircraft; opposite behavior of VRC)
+6. PDCs can be configured with checkboxes for climb via, routing change, a fillable altitude box, and a global checkbox at the bottom which adds runway PDC syntax (only use if your alias file/config file has been customized to include this!)  
+7. **VRC:** Select the aircraft to choose who receives the PDC or which aircraft is indicated in the boundary notification (the tool will auto-open the flight plan; opposite behavior of vSTARS)
+8. **vSTARS:** Open the flight plan of the aircraft to choose who receives the PDC or which aircraft is indicated in the boundary notification (the tool will auto-select the aircraft; opposite behavior of VRC)
 
 You're good to go! See hotkeys below. 
 
